@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.jensen.linkan.userorderservice.dto.LoginRequest;
 import se.jensen.linkan.userorderservice.dto.RegisterRequest;
 import se.jensen.linkan.userorderservice.service.UserService;
 
@@ -21,5 +22,10 @@ public class AuthController {
     public String register(@RequestBody RegisterRequest request) {
         userService.register(request);
         return "User created";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+        return userService.login(request);
     }
 }
