@@ -1,7 +1,6 @@
 package se.jensen.linkan.userorderservice.security;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +10,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final Key key = Keys.hmacShaKeyFor(
+            "my-super-secret-key-my-super-secret-key".getBytes()
+    );
 
     private final long EXPIRATION = 1000 * 60 * 60;
 
@@ -25,8 +26,9 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
