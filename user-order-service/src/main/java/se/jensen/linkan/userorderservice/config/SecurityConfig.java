@@ -7,7 +7,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import se.jensen.linkan.userorderservice.security.JwtFilter;
 import se.jensen.linkan.userorderservice.security.JwtUtil;
 
@@ -37,7 +36,7 @@ public class SecurityConfig {
                 )
 
                 .addFilterBefore(jwtFilter(),
-                        UsernamePasswordAuthenticationFilter.class)
+                        org.springframework.security.web.authentication.www.BasicAuthenticationFilter.class)
 
                 .httpBasic(httpBasic -> httpBasic.disable())
 
