@@ -3,6 +3,7 @@ package se.jensen.linkan.userorderservice.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import se.jensen.linkan.userorderservice.dto.OrderRequest;
+import se.jensen.linkan.userorderservice.dto.OrderResponse;
 import se.jensen.linkan.userorderservice.model.Order;
 import se.jensen.linkan.userorderservice.service.OrderService;
 
@@ -32,7 +33,7 @@ public class OrderController {
     }
 
     @GetMapping("/my")
-    public List<Order> myOrders(Authentication authentication) {
+    public List<OrderResponse> myOrders(Authentication authentication) {
 
         String username = authentication.getName();
 

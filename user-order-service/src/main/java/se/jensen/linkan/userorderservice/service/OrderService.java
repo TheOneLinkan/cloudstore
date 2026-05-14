@@ -1,6 +1,7 @@
 package se.jensen.linkan.userorderservice.service;
 
 import org.springframework.stereotype.Service;
+import se.jensen.linkan.userorderservice.dto.OrderResponse;
 import se.jensen.linkan.userorderservice.dto.Product;
 import se.jensen.linkan.userorderservice.model.Order;
 import se.jensen.linkan.userorderservice.repository.OrderRepository;
@@ -40,7 +41,16 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public List<Order> getOrdersForUser(String username) {
-        return orderRepository.findByUsername(username);
+    public List<OrderResponse> getOrdersForUser(String username) {
+
+        List<Order> orders = orderRepository.findByUsername(username);
+
+        return orders.stream()
+                .map(o -> new OrderResponse(
+                        o.getProductTitle() != null ? o.getProductTitle() : "Unknown",
+                        o.getProductPrice(),
+                        o.getQuantity() != null ? o.getQuantity() : 0
+                ))
+                .toList();
     }
 }
