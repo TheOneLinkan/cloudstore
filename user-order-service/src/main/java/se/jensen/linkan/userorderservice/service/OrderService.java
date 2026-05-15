@@ -53,4 +53,16 @@ public class OrderService {
                 ))
                 .toList();
     }
+
+    public Double getTotalSpent(String username) {
+
+        return orderRepository.findByUsername(username)
+                .stream()
+                .mapToDouble(o -> {
+                    double price = o.getProductPrice() != null ? o.getProductPrice() : 0.0;
+                    int qty = o.getQuantity() != null ? o.getQuantity() : 0;
+                    return price * qty;
+                })
+                .sum();
+    }
 }
