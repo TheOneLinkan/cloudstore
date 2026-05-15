@@ -39,4 +39,12 @@ public class OrderController {
 
         return orderService.getOrdersForUser(username);
     }
+
+    @GetMapping("/summary")
+    public Double getSummary(Authentication authentication) {
+
+        String username = authentication.getName();
+
+        return orderService.getTotalSpent(username);
+    }
 }
