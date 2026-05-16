@@ -47,8 +47,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd user-order-service
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/cloudstore-user-order-service:latest .
+          docker build \
+          -t ${{ secrets.DOCKER_USERNAME }}/cloudstore-user-order-service:latest \
+          -f user-order-service/Dockerfile \
+          user-order-service
 
       - name: Push Docker image
         run: |
