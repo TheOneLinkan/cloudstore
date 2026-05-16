@@ -23,10 +23,10 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Build and test
+      - name: Build and package
         run: |
           cd user-order-service
-          mvn clean test
+          mvn clean package
 
   docker:
 
