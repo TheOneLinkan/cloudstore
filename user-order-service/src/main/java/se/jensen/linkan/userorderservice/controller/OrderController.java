@@ -35,6 +35,10 @@ public class OrderController {
     @GetMapping("/my")
     public List<OrderResponse> myOrders(Authentication authentication) {
 
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Not authenticated");
+        }
+
         String username = authentication.getName();
 
         return orderService.getOrdersForUser(username);
@@ -42,6 +46,10 @@ public class OrderController {
 
     @GetMapping("/summary")
     public Double getSummary(Authentication authentication) {
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Not authenticated");
+        }
 
         String username = authentication.getName();
 
