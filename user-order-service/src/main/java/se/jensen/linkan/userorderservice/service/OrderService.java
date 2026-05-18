@@ -1,6 +1,7 @@
 package se.jensen.linkan.userorderservice.service;
 
 import org.springframework.stereotype.Service;
+import se.jensen.linkan.userorderservice.client.ProductClient;
 import se.jensen.linkan.userorderservice.dto.OrderResponse;
 import se.jensen.linkan.userorderservice.dto.Product;
 import se.jensen.linkan.userorderservice.model.Order;
@@ -12,19 +13,20 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductService productService;
+    private final ProductClient productClient;
 
     public OrderService(OrderRepository orderRepository,
-                        ProductService productService) {
+                        ProductClient productClient) {
         this.orderRepository = orderRepository;
-        this.productService = productService;
+        this.productClient = productClient;
     }
 
     public Order createOrder(Long productId,
                              Integer quantity,
                              String username) {
 
-        Product product = productService.getProductById(productId);
+        Product product = productClient.getProductById(productId);
+
 
         if (product == null) {
             throw new RuntimeException("Product not found");
