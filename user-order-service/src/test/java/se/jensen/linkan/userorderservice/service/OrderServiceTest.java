@@ -10,9 +10,9 @@ import se.jensen.linkan.userorderservice.dto.Product;
 import se.jensen.linkan.userorderservice.model.Order;
 import se.jensen.linkan.userorderservice.repository.OrderRepository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -29,21 +29,55 @@ class OrderServiceTest {
     @Test
     void shouldCreateOrder() {
 
+        // Arrange
+        Long productId = 1L;
+        Integer quantity = 2;
+        String username = "testuser";
+
         Product product = new Product();
-        product.setId(1L);
-        product.setTitle("Laptop");
+        product.setId(productId);
+        product.setTitle("iPhone");
         product.setPrice(1000.0);
 
-        when(productClient.getProductById(1L)).thenReturn(product);
+        when(productClient.getProductById(productId)).thenReturn(product);
 
-        when(orderRepository.save(any(Order.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
+        Order savedOrder = new Order();
+        savedOrder.setProductId(productId);
+        savedOrder.setQuantity(quantity);
+        savedOrder.setUsername(username);
+        savedOrder.setProductTitle("iPhone");
+        savedOrder.setProductPrice(1000.0);
 
-        Order result = orderService.createOrder(1L, 2, "user");
+        when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
 
-        assertEquals("Laptop", result.getProductTitle());
-        assertEquals(2, result.getQuantity());
-        assertEquals("user", result.getUsername());
-        assertEquals(2000.0, result.getProductPrice() * result.getQuantity());
+        // Act
+        Order result = orderService.createOrder(productId, quantity, username);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(productId, result.getProductId());
+        assertEquals(quantity, result.getQuantity());
+        assertEquals(username, result.getUsername());
+        assertEquals("iPhone", result.getProductTitle());
+        assertEquals(1000.0, result.getProductPrice());
+
+        verify(productClient, times(1)).getProductById(productId);
+        verify(orderRepository, times(1)).save(any(Order.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenProductNotFound() {
+
+        Long productId = 999L;
+
+        when(productClient.getProductById(productId)).thenReturn(null);
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> orderService.createOrder(productId, 1, "user"));
+
+        assertEquals("Product not found", exception.getMessage());
+
+        verify(productClient, times(1)).getProductById(productId);
+        verify(orderRepository, never()).save(any());
     }
 }
