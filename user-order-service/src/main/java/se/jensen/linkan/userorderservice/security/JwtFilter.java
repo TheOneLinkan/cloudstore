@@ -27,26 +27,25 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        System.out.println("🔥 JWT FILTER AKTIV");
+        System.out.println("FILTER HIT: " + request.getServletPath());
+        System.out.println("AUTH HEADER: " + request.getHeader("Authorization"));
+
         String path = request.getServletPath();
-
-        if (path.startsWith("/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String header = request.getHeader("Authorization");
 
-        // 1. Kolla om token finns
+        // 🔥 DEBUG LOGG
+        System.out.println("PATH: " + path);
+        System.out.println("AUTH HEADER: " + header);
+
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 2. Plocka ut token
         String token = header.substring(7);
 
         try {
-
             String username = jwtUtil.extractUsername(token);
 
             UsernamePasswordAuthenticationToken auth =
@@ -64,7 +63,6 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
 
         } catch (Exception e) {
-
             System.out.println("JWT ERROR:");
             e.printStackTrace();
 
