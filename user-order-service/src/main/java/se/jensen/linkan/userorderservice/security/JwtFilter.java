@@ -60,6 +60,9 @@ public class JwtFilter extends OncePerRequestFilter {
                             .buildDetails(request)
             );
 
+            // Spara token i request så att ProductClient kan använda den
+            request.setAttribute("jwt_token", token);
+
             SecurityContextHolder.getContext().setAuthentication(auth);
 
         } catch (Exception e) {
