@@ -27,7 +27,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
 
-        return productService.getProducts()
+        return productService.getAllProducts()
                 .stream()
                 .filter(product -> product.getId().equals(id))
                 .findFirst()
