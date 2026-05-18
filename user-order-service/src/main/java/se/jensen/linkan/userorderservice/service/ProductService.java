@@ -1,36 +1,34 @@
 package se.jensen.linkan.userorderservice.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
-import se.jensen.linkan.userorderservice.client.ProductClient;
+import org.springframework.web.client.RestTemplate;
 import se.jensen.linkan.userorderservice.dto.Product;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class ProductService {
 
-    private final ProductClient productClient;
-    private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    public ProductService(ProductClient productClient, ObjectMapper objectMapper) {
-        this.productClient = productClient;
-        this.objectMapper = objectMapper;
-    }
+    private static final String BASE_URL =
+            "http://fakestoreservice-env.eba-qva25xqa.eu-north-1.elasticbeanstalk.com/products";
 
     public List<Product> getAllProducts() {
-        String json = productClient.getProducts();
-        try {
-            return objectMapper.readValue(json, new TypeReference<List<Product>>() {
-            });
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse products", e);
-        }
+
+        Product[] response = restTemplate.getForObject(
+                BASE_URL,
+                Product[].class
+        );
+
+        return Arrays.asList(response);
     }
 
     public Product getProductById(Long id) {
+
         List<Product> products = getAllProducts();
+
         return products.stream()
                 .filter(p -> p.getId() != null && p.getId().equals(id))
                 .findFirst()
