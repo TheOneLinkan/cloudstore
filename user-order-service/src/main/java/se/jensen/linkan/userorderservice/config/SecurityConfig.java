@@ -33,12 +33,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/products/**", "/test-products").permitAll()
+                        .requestMatchers("/orders/**").authenticated()
                         .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(jwtFilter(),
                         org.springframework.security.web.authentication.www.BasicAuthenticationFilter.class
                 )
+
+                .anonymous(anonymous -> anonymous.disable())
 
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .formLogin(form -> form.disable());
