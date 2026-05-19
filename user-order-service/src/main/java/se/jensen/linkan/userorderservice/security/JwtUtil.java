@@ -46,4 +46,13 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public String generateServiceToken() {
+        return Jwts.builder()
+                .setSubject("user-order-service")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
 }
