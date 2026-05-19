@@ -1,6 +1,7 @@
 package se.jensen.linkan.userorderservice.service;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.jensen.linkan.userorderservice.client.ProductClient;
 import se.jensen.linkan.userorderservice.dto.Product;
@@ -10,6 +11,7 @@ import se.jensen.linkan.userorderservice.repository.ProductSnapshotRepository;
 import java.util.List;
 
 @Service
+@Profile("!test")
 public class ProductSyncService {
 
     private final ProductClient productClient;
