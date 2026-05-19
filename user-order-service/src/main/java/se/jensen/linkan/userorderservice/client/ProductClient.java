@@ -1,52 +1,49 @@
 package se.jensen.linkan.userorderservice.client;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Mono;
 import se.jensen.linkan.userorderservice.dto.Product;
+import se.jensen.linkan.userorderservice.security.JwtUtil;
 
 import java.util.List;
 
 @Service
 public class ProductClient {
 
+    private final JwtUtil jwtUtil;
+
     private final WebClient webClient;
 
-    public ProductClient(WebClient.Builder builder) {
+    public ProductClient(JwtUtil jwtUtil, WebClient.Builder builder) {
+
         this.webClient = builder
                 .baseUrl("http://product-service:8080")
                 .build();
+        this.jwtUtil = jwtUtil;
     }
 
     public Product getProductById(Long id) {
-        try {
 
-            Product product = webClient.get()
-                    .uri("/" + id)
-                    .retrieve()
-                    .onStatus(status -> status.is4xxClientError(),
-                            response -> Mono.error(new RuntimeException("Product not found")))
-                    .bodyToMono(Product.class)
-                    .block();
-
-            return product;
-
-        } catch (Exception ex) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
-        }
-
+        return webClient.get()
+                .uri("/" + id)
+                .header("Authorization", "Bearer " + getServiceToken())
+                .retrieve()
+                .bodyToMono(Product.class)
+                .block();
     }
 
     public List<Product> getAllProducts() {
 
         return webClient.get()
                 .uri("/products")
+                .header("Authorization", "Bearer " + getServiceToken())
                 .retrieve()
                 .bodyToFlux(Product.class)
                 .collectList()
                 .block();
+    }
+
+    private String getServiceToken() {
+        return jwtUtil.generateServiceToken();
     }
 }
