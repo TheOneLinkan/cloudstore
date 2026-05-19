@@ -1,10 +1,8 @@
-version: "3.9"
-
 services:
 
   mysql:
     image: mysql:8.0
-    container_name: cloudstore-mysql
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: cloudstore
@@ -37,8 +35,14 @@ services:
     depends_on:
       - mysql
       - product-service
+    restart: on-failure
     networks:
       - cloudstore-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   mysql_data:
