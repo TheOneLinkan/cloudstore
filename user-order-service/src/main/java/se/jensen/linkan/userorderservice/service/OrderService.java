@@ -1,11 +1,11 @@
 package se.jensen.linkan.userorderservice.service;
 
 import org.springframework.stereotype.Service;
-import se.jensen.linkan.userorderservice.client.ProductClient;
 import se.jensen.linkan.userorderservice.dto.OrderResponse;
-import se.jensen.linkan.userorderservice.dto.Product;
 import se.jensen.linkan.userorderservice.model.Order;
+import se.jensen.linkan.userorderservice.model.ProductSnapshot;
 import se.jensen.linkan.userorderservice.repository.OrderRepository;
+import se.jensen.linkan.userorderservice.repository.ProductSnapshotRepository;
 
 import java.util.List;
 
@@ -13,24 +13,22 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductClient productClient;
+    private final ProductSnapshotRepository productRepository;
 
     public OrderService(OrderRepository orderRepository,
-                        ProductClient productClient) {
+                        ProductSnapshotRepository productRepository) {
+
         this.orderRepository = orderRepository;
-        this.productClient = productClient;
+        this.productRepository = productRepository;
     }
 
     public Order createOrder(Long productId,
                              Integer quantity,
                              String username) {
 
-        Product product = productClient.getProductById(productId);
-
-
-        if (product == null) {
-            throw new RuntimeException("Product not found");
-        }
+        
+        ProductSnapshot product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Order order = new Order();
 

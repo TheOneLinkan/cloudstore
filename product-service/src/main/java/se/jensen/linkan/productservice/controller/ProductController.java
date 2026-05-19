@@ -1,6 +1,7 @@
 package se.jensen.linkan.productservice.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import se.jensen.linkan.productservice.dto.Product;
 import se.jensen.linkan.productservice.service.ProductService;
@@ -20,4 +21,10 @@ public class ProductController {
     public List<Product> getProducts() {
         return productService.getProducts();
     }
+
+    @GetMapping("/products/{id}")
+    public Product getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+    }
+
 }
