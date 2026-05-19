@@ -26,22 +26,26 @@ public class ProductSyncService {
     @PostConstruct
     public void loadProducts() {
 
-        System.out.println("SYNCING PRODUCTS...");
+        try {
 
-        List<Product> products =
-                productClient.getAllProducts();
+            List<Product> products = productClient.getAllProducts();
 
-        List<ProductSnapshot> snapshots =
-                products.stream()
-                        .map(p -> new ProductSnapshot(
-                                p.getId(),
-                                p.getTitle(),
-                                p.getPrice()
-                        ))
-                        .toList();
+            products.forEach(product -> {
 
-        repository.saveAll(snapshots);
+                ProductSnapshot snapshot = new ProductSnapshot();
 
-        System.out.println("PRODUCTS SAVED: " + snapshots.size());
+                snapshot.setId(product.getId());
+                snapshot.setTitle(product.getTitle());
+                snapshot.setPrice(product.getPrice());
+
+                repository.save(snapshot);
+            });
+
+            System.out.println("Products synced");
+
+        } catch (Exception e) {
+
+            System.out.println("Could not sync products at startup");
+        }
     }
 }
