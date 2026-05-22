@@ -1,0 +1,63 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cloudstore-net
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    ports:
+      - "8081:8080"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+    networks:
+      - cloudstore-net
+
+  user-order-service:
+    build: ./user-order-service
+    container_name: user-order-service
+    ports:
+      - "8080:8080"
+    environment:
+      PRODUCT_SERVICE_URL: ${PRODUCT_SERVICE_URL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - mysql
+      - product-service
+    restart: on-failure
+    networks:
+      - cloudstore-net
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  cloudstore-frontend:
+    build: ./cloudstore-frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    networks:
+      - cloudstore-net
+
+volumes:
+  mysql_data:
+
+networks:
+  cloudstore-net:
