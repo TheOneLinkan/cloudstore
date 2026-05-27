@@ -62,30 +62,64 @@ function Products() {
     return (
         <div>
 
-            <h2>Products</h2>
-            <p>Products loaded: {products.length}</p>
-            {products.map(product => (
+            <div className="d-flex justify-content-between align-items-center mb-4">
 
-                <div
-                    key={product.id}
-                    style={{
-                        border: "1px solid black",
-                        padding: "10px",
-                        marginBottom: "10px"
-                    }}
-                >
-                    <h3>{product.title}</h3>
+                <h2 className="mb-0">
+                    Products
+                </h2>
 
-                    <p>Price: ${product.price}</p>
+                <span className="badge bg-dark">
+                {products.length} products
+            </span>
 
-                    <button
-                        onClick={() => createOrder(product.id)}
+            </div>
+
+            <div className="row">
+
+                {products.map(product => (
+
+                    <div
+                        className="col-md-4 mb-4"
+                        key={product.id}
                     >
-                        Create Order
-                    </button>
 
-                </div>
-            ))}
+                        <div className="card h-100 shadow-sm">
+
+                            <img
+                                src={product.image}
+                                className="card-img-top p-3"
+                                style={{
+                                    height: "250px",
+                                    objectFit: "contain"
+                                }}
+                                alt={product.title}
+                            />
+
+                            <div className="card-body d-flex flex-column">
+
+                                <h5 className="card-title">
+                                    {product.title}
+                                </h5>
+
+                                <p className="card-text fw-bold">
+                                    ${product.price}
+                                </p>
+
+                                <button
+                                    className="btn btn-primary mt-auto"
+                                    onClick={() => createOrder(product.id)}
+                                >
+                                    Create Order
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                ))}
+
+            </div>
 
         </div>
     );
