@@ -4,15 +4,25 @@ import Products from "./Products";
 function App() {
 
     return (
-        <div>
+        <div className="bg-light min-vh-100">
 
-            <h1>CloudStore Frontend</h1>
+            <nav className="navbar navbar-dark bg-dark shadow-sm">
+                <div className="container">
+                    <span className="navbar-brand mb-0 h1">
+                        CloudStore
+                    </span>
+                </div>
+            </nav>
 
-            <Login/>
+            <div className="container py-4">
 
-            <hr/>
+                <Login/>
 
-            <Products/>
+                <hr className="my-4"/>
+
+                <Products/>
+
+            </div>
 
         </div>
     );

@@ -40,34 +40,43 @@ function Login() {
     }
 
     return (
-        <div>
-            <h2>Login</h2>
+        <div className="card shadow-sm p-4 mb-4">
+
+            <h2 className="mb-4">
+                Login
+            </h2>
 
             <form onSubmit={handleLogin}>
 
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
+                <div className="mb-3">
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="form-control"
+                    />
+                </div>
 
-                <br/><br/>
+                <div className="mb-3">
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="form-control"
+                    />
+                </div>
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <br/><br/>
-
-                <button type="submit">
+                <button
+                    type="submit"
+                    className="btn btn-dark"
+                >
                     Login
                 </button>
 
             </form>
+
         </div>
     );
 }
