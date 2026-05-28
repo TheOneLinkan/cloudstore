@@ -9,9 +9,7 @@ on:
 jobs:
 
   build-and-test:
-
     runs-on: ubuntu-latest
-
     steps:
 
       - name: Checkout code
@@ -21,19 +19,21 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 17
 
-      - name: Build and package
+      - name: Build and test user-order-service
         run: |
           cd user-order-service
           mvn clean package
 
+      - name: Build and test product-service
+        run: |
+          cd product-service
+          mvn clean package
+
   docker:
-
     runs-on: ubuntu-latest
-
     needs: build-and-test
-
     steps:
 
       - name: Checkout code
@@ -45,15 +45,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build JAR
-        run: |
-          cd user-order-service
-          mvn clean package -DskipTests
+      - name: Build and push user-order-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./user-order-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cloudstore-user-order-service:latest
 
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/cloudstore-user-order-service:latest ./user-order-service
+      - name: Build and push product-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./product-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cloudstore-product-service:latest
 
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/cloudstore-user-order-service:latest
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./cloudstore-frontend
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cloudstore-frontend:latest
