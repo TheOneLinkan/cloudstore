@@ -6,7 +6,7 @@ function Products() {
 
     useEffect(() => {
 
-        fetch("http://localhost:8081/products")
+        fetch(`${import.meta.env.VITE_PRODUCT_URL}/products`)
             .then(response => response.json())
             .then(data => {
 
@@ -27,7 +27,7 @@ function Products() {
         try {
 
             const response = await fetch(
-                "http://localhost:8080/orders",
+                `${import.meta.env.VITE_API_URL}/orders`,
                 {
                     method: "POST",
                     headers: {

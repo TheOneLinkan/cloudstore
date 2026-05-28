@@ -48,11 +48,20 @@ services:
       timeout: 5s
       retries: 10
 
-  cloudstore-frontend:
-    build: ./cloudstore-frontend
+  frontend:
+    build:
+      context: ./cloudstore-frontend
+      dockerfile: Dockerfile
+
     container_name: frontend
+
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_PRODUCT_URL: ${VITE_PRODUCT_URL}
+
     ports:
       - "5173:5173"
+
     networks:
       - cloudstore-net
 
