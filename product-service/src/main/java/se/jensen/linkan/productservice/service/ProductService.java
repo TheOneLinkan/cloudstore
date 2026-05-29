@@ -21,7 +21,7 @@ public class ProductService {
     public List<Product> getProducts() {
 
         String url =
-                "https://fakestoreapi.com/products";
+                "http://yahyatesting-env.eba-sarnymwd.eu-north-1.elasticbeanstalk.com/products";
 
         Product[] products =
                 restTemplate.getForObject(url, Product[].class);
@@ -32,7 +32,7 @@ public class ProductService {
 
     public Product getProductById(Long id) {
 
-        String url = "https://fakestoreapi.com/products/" + id;
+        String url = "http://yahyatesting-env.eba-sarnymwd.eu-north-1.elasticbeanstalk.com/products/" + id;
 
         try {
             return restTemplate.getForObject(url, Product.class);
