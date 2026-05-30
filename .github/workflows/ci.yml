@@ -66,12 +66,11 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/cloudstore-frontend:latest
 
-  deploy:
+  deploy-user-order:
     runs-on: ubuntu-latest
     needs: docker
-
     steps:
-      - name: Deploy to EC2
+      - name: Deploy user-order-service to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -85,3 +84,22 @@ jobs:
             docker compose up -d
             sleep 10
             docker compose ps
+
+    deploy-product:
+      runs-on: ubuntu-latest
+      needs: docker
+      steps:
+        - name: Deploy product-service to EC2
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.EC2_HOST_2 }}
+            username: ${{ secrets.EC2_USER }}
+            key: ${{ secrets.EC2_KEY }}
+            command_timeout: 5m
+            script: |
+              cd ~/cloudstore
+              docker compose down
+              docker compose pull
+              docker compose up -d
+              sleep 10
+              docker compose ps
