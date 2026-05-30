@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 import se.jensen.linkan.userorderservice.model.Order;
 import se.jensen.linkan.userorderservice.model.ProductSnapshot;
 import se.jensen.linkan.userorderservice.repository.OrderRepository;
@@ -77,12 +78,10 @@ class OrderServiceTest {
         when(productRepository.findById(productId))
                 .thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
+        assertThrows(
+                ResponseStatusException.class,
                 () -> orderService.createOrder(productId, 1, "user")
         );
-
-        assertEquals("Product not found", exception.getMessage());
 
         verify(productRepository, times(1)).findById(productId);
         verify(orderRepository, never()).save(any());
