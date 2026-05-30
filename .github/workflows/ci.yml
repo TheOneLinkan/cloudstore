@@ -96,6 +96,6 @@ jobs:
           command_timeout: 5m
           script: |
             cd ~/cloudstore
-            docker compose down
-            docker compose pull
-            docker compose up -d
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
