@@ -59,7 +59,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(
-                List.of("*")
+                List.of("https://thecloudstore-product.duckdns.org")
         );
 
         configuration.setAllowedMethods(
