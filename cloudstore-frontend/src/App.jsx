@@ -13,9 +13,9 @@ function App() {
             <div className="container py-4">
                 <Login/>
                 <hr className="my-4"/>
-                <Products/>
-                <hr className="my-4"/>
                 <Orders/>
+                <hr className="my-4"/>
+                <Products/>
             </div>
         </div>
     );
