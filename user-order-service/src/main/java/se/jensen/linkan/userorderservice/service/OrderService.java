@@ -1,6 +1,8 @@
 package se.jensen.linkan.userorderservice.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import se.jensen.linkan.userorderservice.dto.OrderResponse;
 import se.jensen.linkan.userorderservice.model.Order;
 import se.jensen.linkan.userorderservice.model.ProductSnapshot;
@@ -26,9 +28,9 @@ public class OrderService {
                              Integer quantity,
                              String username) {
 
-        
+
         ProductSnapshot product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
         Order order = new Order();
 
