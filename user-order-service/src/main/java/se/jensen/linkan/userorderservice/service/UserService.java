@@ -1,8 +1,10 @@
 package se.jensen.linkan.userorderservice.service;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import se.jensen.linkan.userorderservice.dto.LoginRequest;
 import se.jensen.linkan.userorderservice.dto.RegisterRequest;
 import se.jensen.linkan.userorderservice.model.User;
@@ -38,10 +40,10 @@ public class UserService {
     public String login(LoginRequest request) {
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
         return jwtUtil.generateToken(user.getUsername());
