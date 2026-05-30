@@ -1,6 +1,10 @@
 package se.jensen.linkan.userorderservice.controller;
 
-import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import se.jensen.linkan.userorderservice.dto.LoginRequest;
 import se.jensen.linkan.userorderservice.dto.RegisterRequest;
 import se.jensen.linkan.userorderservice.service.UserService;
@@ -16,7 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
+    public String register(@Valid @RequestBody RegisterRequest request) {
         userService.register(request);
         return "User created";
     }
@@ -24,10 +28,5 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest request) {
         return userService.login(request);
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "You are authenticated";
     }
 }
