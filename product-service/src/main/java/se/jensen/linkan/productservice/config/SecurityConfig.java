@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
@@ -50,7 +51,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(
-                List.of("https://thecloudstore-product.duckdns.org")
+                List.of("https://thecloudstore-product.duckdns.org",
+                        "http://localhost:5173"
+                )
         );
 
         configuration.setAllowedMethods(
