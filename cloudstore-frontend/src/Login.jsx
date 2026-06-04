@@ -48,6 +48,7 @@ function Login() {
         localStorage.removeItem("token");
         localStorage.removeItem("username");
         setLoggedInUser("");
+        window.location.reload();
     }
 
     if (loggedInUser) {
