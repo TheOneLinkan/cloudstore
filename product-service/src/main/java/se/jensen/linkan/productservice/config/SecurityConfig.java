@@ -50,7 +50,10 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(
-                List.of("https://thecloudstore-product.duckdns.org")
+                List.of(
+                        "http://localhost:5173",
+                        "https://thecloudstore-product.duckdns.org",
+                        "http://thecloudstore-product.duckdns.org")
         );
 
         configuration.setAllowedMethods(
