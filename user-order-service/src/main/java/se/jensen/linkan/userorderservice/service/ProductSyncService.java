@@ -25,27 +25,39 @@ public class ProductSyncService {
 
     @PostConstruct
     public void loadProducts() {
+        int attempts = 0;
+        int maxAttempts = 5;
 
-        try {
+        while (attempts < maxAttempts) {
+            try {
+                List<Product> products = productClient.getAllProducts();
 
-            List<Product> products = productClient.getAllProducts();
+                products.forEach(product -> {
+                    ProductSnapshot snapshot = new ProductSnapshot();
+                    snapshot.setId(product.getId());
+                    snapshot.setTitle(product.getTitle());
+                    snapshot.setPrice(product.getPrice());
+                    repository.save(snapshot);
+                });
 
-            products.forEach(product -> {
+                System.out.println("Products synced");
+                return;
 
-                ProductSnapshot snapshot = new ProductSnapshot();
+            } catch (Exception e) {
+                attempts++;
+                System.out.println("Could not sync products, attempt " + attempts + " of " + maxAttempts);
 
-                snapshot.setId(product.getId());
-                snapshot.setTitle(product.getTitle());
-                snapshot.setPrice(product.getPrice());
-
-                repository.save(snapshot);
-            });
-
-            System.out.println("Products synced");
-
-        } catch (Exception e) {
-
-            System.out.println("Could not sync products at startup");
+                if (attempts < maxAttempts) {
+                    try {
+                        Thread.sleep(10000); // vänta 10 sekunder innan nästa försök
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+            }
         }
+
+        System.out.println("Could not sync products after " + maxAttempts + " attempts");
     }
 }
