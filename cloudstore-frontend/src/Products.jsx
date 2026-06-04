@@ -5,17 +5,22 @@ function Products() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
+        fetch(import.meta.env.VITE_PRODUCT_URL + "/products")
+            .then(async (res) => {
 
-        fetch(`${import.meta.env.VITE_PRODUCT_URL}/products`)
-            .then(response => response.json())
-            .then(data => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
 
-                console.log(data);
-
+                const text = await res.text();
+                return text ? JSON.parse(text) : [];
+            })
+            .then((data) => {
                 setProducts(data);
             })
-            .catch(error => {
-                console.error(error);
+            .catch((err) => {
+                console.error("Failed to load products:", err);
+                setProducts([]);
             });
 
     }, []);
